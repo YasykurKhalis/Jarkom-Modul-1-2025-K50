@@ -320,6 +320,108 @@ Dari situ kita dapat info credential, alat yang digunakan sama stream berapa
 ![14-3](/assets/14-3.png)
 
 ## Soal 15
+Jalankan command `tshark -r hiddenmsg.pcapng -Y "usb.transfer_type==1 && usb.data_len==8" -T fields -e frame.number -e usbhid.data > usb_reports.txt` untuk mendapatkan usbhid dari keystrokes lalu masukkan ke file `usb_reports.txt`.
+
+Isi file `usb_reports.txt`:
+
+![15](/assets/15.PNG)
+
+Lalu buat file python untuk men-decode usbhid, `hid_decode.py`:
+```python
+#!/usr/bin/env python3
+# hid_decode.py
+# Usage: python3 hid_decode.py usb_reports_clean.txt
+import sys
+
+# mapping HID usage id -> char (US QWERTY)
+hid = {
+  0x04:'a',0x05:'b',0x06:'c',0x07:'d',0x08:'e',0x09:'f',0x0a:'g',0x0b:'h',
+  0x0c:'i',0x0d:'j',0x0e:'k',0x0f:'l',0x10:'m',0x11:'n',0x12:'o',0x13:'p',
+  0x14:'q',0x15:'r',0x16:'s',0x17:'t',0x18:'u',0x19:'v',0x1a:'w',0x1b:'x',
+  0x1c:'y',0x1d:'z',
+  0x1e:'1',0x1f:'2',0x20:'3',0x21:'4',0x22:'5',0x23:'6',0x24:'7',0x25:'8',0x26:'9',0x27:'0',
+  0x28:'<ENTER>',0x2c:' ',0x2d:'-',0x2e:'=',0x2f:'[',0x30:']',0x31:'\\',
+  0x33:';',0x34:"'",0x35:'`',0x36:',',0x37:'.',0x38:'/'
+}
+
+# shift substitutions for non-letters
+shift_map = {'1':'!','2':'@','3':'#','4':'$','5':'%','6':'^','7':'&','8':'*','9':'(','0':')',
+             '-':'_','=':'+','[':'{',']':'}','\\':'|',';':':',"'":'"','`':'~',',':'<','.':'>','/':'?'}
+
+def apply_shift(ch):
+    if not ch: return ch
+    if 'a' <= ch <= 'z': return ch.upper()
+    return shift_map.get(ch, ch)
+
+def parse_hex(s):
+    s = s.strip().replace(':','').replace(' ','')
+    try:
+        b = bytes.fromhex(s)
+        return list(b)
+    except:
+        return None
+
+def main(path):
+    if path == "-":
+        f = sys.stdin
+    else:
+        f = open(path,'r',errors='ignore')
+    out_chars = []
+    last_key = None
+    for line in f:
+        line=line.strip()
+        if not line: continue
+        # accept "frame<TAB>hex" or just hex
+        parts = line.split()
+        if len(parts) == 1:
+            frame = ""
+            hexs = parts[0]
+        else:
+            frame = parts[0]
+            hexs = parts[1]
+        rpt = parse_hex(hexs)
+        if not rpt or len(rpt) < 3:
+            continue
+        modifier = rpt[0]
+        key = rpt[2]
+        shift = bool(modifier & 0x02 or modifier & 0x20)  # left/right shift bits
+        # if no key pressed -> reset last_key
+        if key == 0:
+            last_key = None
+            continue
+        # only treat as new keypress when key changes (simple debouncing)
+        if key == last_key:
+            continue
+        last_key = key
+        ch = hid.get(key, f"[KC_{key:02x}]")
+        ch = apply_shift(ch) if shift else ch
+        # print with frame for traceability
+        if frame:
+            sys.stdout.write(f"{frame}:{ch}\n")
+        else:
+            sys.stdout.write(f"{ch}")
+        sys.stdout.flush()
+    if f is not sys.stdin:
+        f.close()
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: hid_decode.py usb_reports_clean.txt")
+        sys.exit(1)
+    main(sys.argv[1])
+```
+
+Lalu jalankan `python3 hid_decode.py usb_reports.txt > keystrokes.txt` untuk meng-execute file python dan menaruh hasilnya di `keystrokes.txt`.
+
+Isi file `keystrokes.txt`:
+
+![15-1](/assets/15-1.PNG)
+
+Jalankan command `cut -d: -f2 keystrokes.txt | tr -d '\n' ; echo` untuk melihat semua karakter dalam 1 baris dan decode hasilnya dengan base64:
+
+![15-2](/assets/15-2.PNG)
+
+![15-3](/assets/15-3.PNG)
 
 ## Soal 16
 Pertama coba cek file pcap dan follow stream:
