@@ -219,23 +219,172 @@ Di Wireshark, gunakan display filter: `ftp.request.command && ip.addr == 192.236
 ![9-1](/assets/9-1.PNG)
 
 ## Soal 10
+![10](/assets/10.png)
+
+Hasil menunjukkan kalau pengiriman 100 packet ping tidak begitu membebani router(Eru).
 
 ## Soal 11
+Cek wireshark antara Eru dan Melkor untuk menguji kerentanan Telnet:
+Setting config: `nano /etc/inetd.conf` (hapus # pada bagian service)
+Nyalakan terlebih dahulu: `service openbsd-inetd start`
+
+Pertama buat akun di Melkor terlebih dahulu:
+
+![11](/assets/11.png)
+
+Credential: k50-jos (username) josjis (password)
+
+![11-1](/assets/11-1.png)
+
+Tangkapan traffic telnet menunjukkan bahwa kredensial dapat dilihat secara plainsight: (menggunakan Wireshark TCP Stream agar mudah dibaca)
+
+![11-2](/assets/11-2.png)
 
 ## Soal 12
+Pastikan netcat ada untuk Eru dengan: `which nc`
+Jika tidak ada maka install:
+```sh
+apt-get update
+apt-get install -y netcat-openbsd
+```
+
+Lalu jalankan netcat untuk port 21 dan 80:
+```sh
+nc -l 21 >/dev/null 2>&1 &
+nc -l 80 >/dev/null 2>&1 &
+```
+
+![12](/assets/12.PNG)
+
+Lalu di Eru, jalankan: `nc -zv -w2 192.236.1.2 21 80 666 2>&1` untuk langsung mendapatkan ketiga port
+
+![12](/assets/12-1.PNG)
 
 ## Soal 13
+Install SSH Server di Eru:
+```sh
+apt-get update
+apt-get install -y openssh-server
+```
+
+Pastikan sshd berjalan (kalau systemctl tidak ada, jalankan manual):
+```sh
+service ssh start
+```
+atau
+```sh
+/etc/init.d/ssh start
+```
+
+Buat user admin(password: admin1234):
+```sh
+adduser eruadmin
+passwd eruadmin
+```
+
+Mulai capture packet di Wireshark seperti no.6 lalu lakukan koneksi sshd ke Eru:
+```sh
+ssh eruadmin@192.236.2.1
+```
+
+![13](/assets/13.PNG)
 
 ## Soal 14
+```sh
+nc 10.15.43.32 3401
+```
+
+Pertama kita coba cari ujung file dan lihat no packet terakhir, ternyata packet 500358
+
+![14](/assets/14.png)
+
+Setelah itu coba mencari http yang ada "login" dengan display filter:
+
+![14-1](/assets/14-1.png)
+
+Selanjutnya kita lakukan follow stream, yang menghasilkan stream di bawah:
+
+![14-2](/assets/14-2.png)
+
+Dari situ kita dapat info credential, alat yang digunakan sama stream berapa
+
+![14-3](/assets/14-3.png)
 
 ## Soal 15
 
 ## Soal 16
+Pertama coba cek file pcap dan follow stream:
+
+![16](/assets/16.png)
+
+Disana kita dapat banyak hal kayak credential dan beberapa .exe (yang sepertinya malware) ada 5 q,w,e,r,t. Selanjutnya diminta sha256sum untuk tiap tiap file exe malware. Hal ini bisa didapatkan dengan melakukan:
+
+Display filter: `ftp-data`, mengambil protokol file transfer yang ada data:
+
+![16-1](/assets/16-1.png)
+
+Setelah itu klik packet yang mengandung nama program yang kita cari, contohnya ini `q.exe`, lalu lakukan follow stream dan pilih `show as raw`:
+
+![16-2](/assets/16-2.png)
+
+Klik tombol save as terus dinamai sesuai nama program (disini `q.exe`), setelah file exe jadi, masuk ke tools yang bisa memberikan sha256 suatu file, disini kami menggunakan sha256 file checksum online yang bisa kita copy untuk menjawab pertanyaan pertanyaan sha256 file.
+
+![16-3](/assets/16-3.png)
+
+Lakukan langkah langkah tersebut sesuai dengan program yang ditanyakan dan nanti soal akan bisa terselesaikan:
+
+![16-4](/assets/16-4.png)
 
 ## Soal 17
+Pertama kita coba cari file apa saja yang bisa diexport dengan mengecek satu satu File > Export Objects > untuk tiap protokol, dimana di HTTP ada file yang mencurigakan:
+
+![17](/assets/17.png)
+
+Selanjutnya tinggal download (save) atau export file tersebut dan check sha256 secara online:
+
+![17-1](/assets/17-1.png)
+
+![17-2](/assets/17-2.png)
 
 ## Soal 18
+Pertama kita coba cari file apa saja yang bisa diexport dengan mengecek satu satu File > Export Objects > untuk tiap protokol, dimana di SMB ada file yang mencurigakan:
+
+![18](/assets/18.png)
+
+Dari situ kita dapat dua file yang suspicious, dari situ kita lanjutkan save dan check 256sum masing-masing file:
+
+![18-1](/assets/18-1.png)
+
+Hal ini lakukan untuk kedua file dan soal akan solve:
+
+![18-2](/assets/18-2.png)
 
 ## Soal 19
+Pertama tama kita coba tcp stream dan ternyata ada satu pesan email panjang yang mengandung semua pertanyaan:
+
+![19](/assets/19.png)
+
+![19-1](/assets/19-1.png)
 
 ## Soal 20
+Pertama diberikan dua file, pcap dan txt. Dimana txt ini merupakan kunci untuk dekripsi protokol TLS yang telah tercapture, caranya adalah dengan memencet:
+Edit > Preference > Protocols > TLS.
+
+![20](/assets/20.png)
+
+Setelah itu kita mulai cari apa yang ditanyakan soal, seperti:
+
+![20-1](/assets/20-1.png)
+
+Setelah dapet nama file, kita coba dapatkan file asli `invest_20.dll` dengan cara:
+File > Export Objects > HTTP
+
+![20-2](/assets/20-2.png)
+
+Lalu dapatkan SHA256nya:
+
+![20-3](/assets/20-3.png)
+
+Soal dapat dikerjakan dan flag didapatkan:
+
+![20-4](/assets/20-4.png)
