@@ -6,4 +6,4 @@ echo "apt update && apt install -y iptables" > /root/.bashrc
 # up iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 192.236.0.0/16
 
 # <----Clients---->
-echo "nameserver 192.168.122.1" > /etc/resolv.conf
+echo 'echo "nameserver 192.168.122.1" > /etc/resolv.conf' > /root/.bashrc
