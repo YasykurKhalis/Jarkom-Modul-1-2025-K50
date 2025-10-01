@@ -376,7 +376,7 @@ Setelah itu kita mulai cari apa yang ditanyakan soal, seperti:
 
 ![20-1](/assets/20-1.png)
 
-Setelah dapet nama file, kita coba dapatkan file asli `invest_20.dll` dengan cara:
+Setelah dapat nama file, kita coba dapatkan file asli `invest_20.dll` dengan cara:
 File > Export Objects > HTTP
 
 ![20-2](/assets/20-2.png)
