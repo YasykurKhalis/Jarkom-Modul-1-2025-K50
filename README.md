@@ -287,8 +287,11 @@ Mulai capture packet di Wireshark seperti no.6 lalu lakukan koneksi sshd ke Eru:
 ssh eruadmin@192.236.2.1
 ```
 
-![13](/assets/13.PNG)
+![13](/assets/13.PNG)   
+Tangkapan Wireshark:
+![13-1](/assets/13-1.PNG)    
 
+Hasil capture wireshark menunjukkan bahwa data login yang tercatat di jaringan telah terenkripsi (berbeda dengan Telnet yang bisa dilihat username dan password secara plaintext). Hal ini karena SSH atau __Secure Shell__ merupakan protokol administrasi remote yang memperbolehkan pengguna untuk mengakses dan mengontrol server mereka dalam jaringan secara aman. Jadi dipastikan datanya terenkripsi berbeda dengan Telnet yang plain text
 ## Soal 14
 ```sh
 nc 10.15.43.32 3401
