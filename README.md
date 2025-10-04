@@ -111,12 +111,16 @@ nano /etc/vsftpd.conf
 ```
 
 Config vsftpd.conf:
+
+Ubah:
 ```
 local_enable=YES
 write_enable=YES
 chroot_local_user=YES
-tambahkan:
-allow _writeable_chroot=YES
+```
+Tambahkan:
+```
+allow_writeable_chroot=YES
 userlist_enable=YES
 userlist_deny=YES
 ```
@@ -124,13 +128,12 @@ userlist_deny=YES
 Buat user ainur dengan password `nomelkor`:
 ```sh
 adduser ainur
-passwd ainur
 ```
 
 Siapkan direktori khusus FTP:
 ```sh
 mkdir -p /home/ainur
-chown ainur:ainur /home/ainu
+chown ainur:ainur /home/ainur
 chmod 755 /home/ainur
 ```
 
@@ -512,5 +515,5 @@ Kerap terjadi error saat connect telnet ke melkor, ternyata perlu install telnet
 ![Kendala11-1](/assets/kendala-11-1.png)
 
 ## Revisi
-Terjadi ketidaksesuaian jawaban untuk nomer 7 ketika demo dilakukan. User Melkor masih bisa login ke FTP Server meskipun memiliki directory terpisah dengan Ainur. Namun ketika dicoba lagi sesuai dengan instruksi yang sudah kami tulis di nomer 7, user Melkor tidak punya akses ke FTP Server. Kemungkinan demonstran melakukan tahapan yang salah ketika demo dilakukan sehingga jawabannya tidak sesuai dengan soal.
+Terjadi ketidaksesuaian jawaban untuk nomer 7 ketika demo dilakukan. User Melkor masih bisa login ke FTP Server meskipun di directory terpisah dengan Ainur. Namun ketika dicoba lagi sesuai dengan instruksi yang sudah kami tulis di nomer 7, user Melkor tidak punya akses ke FTP Server. Kemungkinan demonstran melakukan tahapan yang salah ketika demo dilakukan sehingga jawabannya tidak sesuai dengan soal.
 
