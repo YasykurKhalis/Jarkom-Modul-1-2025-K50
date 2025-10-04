@@ -507,6 +507,10 @@ Soal dapat dikerjakan dan flag didapatkan:
 ### No.11
 Kerap terjadi error saat connect telnet ke melkor, ternyata perlu install telnetd dan openbsd-inetd untuk memungkinkan hubungan telnet, namun juga ada masalah lagi, yang ternyata bisa terselesaikan dengan mengubah konfigurasi di /etc/inetd.conf dan melakukan service start.
 
-![Kendala11](/assets/Kendala11.png)
+![Kendala11](/assets/kendala-11.png)
 
-![Kendala11-1](/assets/Kendala11-1.png)
+![Kendala11-1](/assets/kendala-11-1.png)
+
+## Revisi
+Terjadi ketidaksesuaian jawaban untuk nomer 7 ketika demo dilakukan. User Melkor masih bisa login ke FTP Server meskipun memiliki directory terpisah dengan Ainur. Namun ketika dicoba lagi sesuai dengan instruksi yang sudah kami tulis di nomer 7, user Melkor tidak punya akses ke FTP Server. Kemungkinan demonstran melakukan tahapan yang salah ketika demo dilakukan sehingga jawabannya tidak sesuai dengan soal.
+
