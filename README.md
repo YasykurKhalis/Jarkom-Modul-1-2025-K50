@@ -39,7 +39,10 @@ Pastikan client terhubung satu sama lain. Konfigurasi di Eru dan setiap client.
 
 ![3-3](/assets/3-3.png)
 
-![3-4](/assets/3-4.png)
+![3-4](/assets/3-4.png)     
+
+Setelah itu kita coba salah satu node (disini Varda menghubungi node lain):    
+![3-5](/assets/3-5.png).
 
 ## Soal 4
 Pastikan agar setiap Client dapat tersambung ke internet
