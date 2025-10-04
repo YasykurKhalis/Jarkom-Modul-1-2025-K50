@@ -502,3 +502,11 @@ Lalu dapatkan SHA256nya:
 Soal dapat dikerjakan dan flag didapatkan:
 
 ![20-4](/assets/20-4.png)
+
+## Kendala
+### No.11
+Kerap terjadi error saat connect telnet ke melkor, ternyata perlu install telnetd dan openbsd-inetd untuk memungkinkan hubungan telnet, namun juga ada masalah lagi, yang ternyata bisa terselesaikan dengan mengubah konfigurasi di /etc/inetd.conf dan melakukan service start.
+
+![Kendala11](/assets/Kendala11.png)
+
+![Kendala11-1](/assets/Kendala11-1.png)
